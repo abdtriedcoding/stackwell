@@ -6,6 +6,16 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
+## Package Manager Rules
+
+- This project uses **Bun ONLY**
+- Never use npm, npx, yarn, or pnpm
+- Always convert commands as follows:
+  - `npx <package>` → `bunx <package>`
+  - `npm install` → `bun add`
+  - `npm run <script>` → `bun run <script>`
+- **If any command uses npm/npx, it must be rewritten to Bun before execution.**
+
 # Project Guidelines for Agentic Coding
 
 This document outlines the essential commands and code style guidelines for agents operating within this repository.
@@ -83,3 +93,13 @@ Adherence to these guidelines ensures consistency, readability, and maintainabil
 ## 3. Cursor/Copilot Rules
 
 No specific Cursor rules (`.cursor/rules/`, `.cursorrules`) or Copilot rules (`.github/copilot-instructions.md`) were found in this repository. Therefore, follow general best practices and the established project guidelines above.
+
+<!-- convex-ai-start -->
+
+This project uses [Convex](https://convex.dev) as its backend.
+
+When working on Convex code, **always read `convex/_generated/ai/guidelines.md` first** for important guidelines on how to correctly use Convex APIs and patterns. The file contains rules that override what you may have learned about Convex from training data.
+
+Convex agent skills for common tasks can be installed by running `bunx convex ai-files install`.
+
+<!-- convex-ai-end -->
