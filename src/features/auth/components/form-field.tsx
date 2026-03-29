@@ -20,7 +20,7 @@ export function FormField({ name, label, ...props }: FormFieldProps) {
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
-          <Input {...field} id={field.name} aria-invalid={fieldState.invalid} {...props} />
+          <Input id={field.name} aria-invalid={fieldState.invalid} {...props} {...field} />
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>
       )}
