@@ -6,16 +6,6 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
-## Package Manager Rules
-
-- This project uses **Bun ONLY**
-- Never use npm, npx, yarn, or pnpm
-- Always convert commands as follows:
-  - `npx <package>` → `bunx <package>`
-  - `npm install` → `bun add`
-  - `npm run <script>` → `bun run <script>`
-- **If any command uses npm/npx, it must be rewritten to Bun before execution.**
-
 # Project Guidelines for Agentic Coding
 
 This document outlines the essential commands and code style guidelines for agents operating within this repository.
@@ -24,19 +14,19 @@ This document outlines the essential commands and code style guidelines for agen
 
 ### General Commands
 
-- **Install Dependencies**: `bun install`
-- **Development Server**: `bun run dev` (Starts the Next.js development server)
-- **Build Project**: `bun run build` (Builds the Next.js application for production)
-- **Start Production Server**: `bun run start` (Starts the Next.js production server after building)
-- **Lint Code**: `bun run lint` (Runs ESLint to check for code quality and style issues)
-- **Format Code**: `bun run format` (Formats code using Prettier across `**/*.{js,jsx,ts,tsx,json,css,md}` files)
+- **Install Dependencies**: `npm install`
+- **Development Server**: `npm run dev` (Starts the Next.js development server)
+- **Build Project**: `npm run build` (Builds the Next.js application for production)
+- **Start Production Server**: `npm run start` (Starts the Next.js production server after building)
+- **Lint Code**: `npm run lint` (Runs ESLint to check for code quality and style issues)
+- **Format Code**: `npm run format` (Formats code using Prettier across `**/*.{js,jsx,ts,tsx,json,css,md}` files)
 
 ### Pre-commit Hooks (Husky & lint-staged)
 
 - A `pre-commit` hook is configured using Husky and `lint-staged`.
 - Before each commit, `lint-staged` will automatically:
-  - Run `bun run lint --fix` and `bun run format` on staged `*.{js,jsx,ts,tsx}` files.
-  - Run `bun run format` on staged `*.{json,css,md}` files.
+  - Run `npm run lint --fix` and `npm run format` on staged `*.{js,jsx,ts,tsx}` files.
+  - Run `npm run format` on staged `*.{json,css,md}` files.
 - **Commits will be blocked if unfixable ESLint errors or formatting issues exist in staged files.**
 
 ## 2. Code Style Guidelines
@@ -57,14 +47,14 @@ Adherence to these guidelines ensures consistency, readability, and maintainabil
 
 ### Formatting
 
-- **Prettier**: The project uses Prettier for consistent code formatting. Run `bun run format` to automatically format your code.
+- **Prettier**: The project uses Prettier for consistent code formatting. Run `npm run format` to automatically format your code.
   - Configuration is in `.prettierrc.json`:
     - `semi`: `true` (Add semicolons at the end of statements)
     - `singleQuote`: `true` (Use single quotes instead of double quotes)
     - `tabWidth`: `2` (Indent using 2 spaces)
     - `trailingComma`: `all` (Add trailing commas wherever valid in ES5, TypeScript, and flow)
     - `printWidth`: `100` (Wrap lines longer than 100 characters)
-- **ESLint**: ESLint is used for code quality and style enforcement. Run `bun run lint` to identify issues. The `pre-commit` hook will attempt to fix fixable issues automatically.
+- **ESLint**: ESLint is used for code quality and style enforcement. Run `npm run lint` to identify issues. The `pre-commit` hook will attempt to fix fixable issues automatically.
 - **Indentation**: Use 2 spaces for indentation.
 
 ### Types (TypeScript)
@@ -100,6 +90,6 @@ This project uses [Convex](https://convex.dev) as its backend.
 
 When working on Convex code, **always read `convex/_generated/ai/guidelines.md` first** for important guidelines on how to correctly use Convex APIs and patterns. The file contains rules that override what you may have learned about Convex from training data.
 
-Convex agent skills for common tasks can be installed by running `bunx convex ai-files install`.
+Convex agent skills for common tasks can be installed by running `npx convex ai-files install`.
 
 <!-- convex-ai-end -->
