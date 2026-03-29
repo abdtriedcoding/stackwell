@@ -40,7 +40,10 @@ export const resetPasswordSchema = z
   });
 
 export const verifyEmailSchema = z.object({
-  otp: z.string().length(6, 'OTP must be exactly 6 digits'),
+  otp: z
+    .string()
+    .length(6, 'OTP must be exactly 6 digits')
+    .regex(/^\d+$/, 'OTP must contain only digits'),
 });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;

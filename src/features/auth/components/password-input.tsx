@@ -23,7 +23,6 @@ export function PasswordInput({ name, className, ...props }: PasswordInputProps)
         id={name}
         name={name}
         type={isVisible ? 'text' : 'password'}
-        aria-invalid={false}
         className={className}
         {...props}
       />
