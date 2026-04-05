@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
-import { ConvexClientProvider } from './ConvexClientProvider';
 import { Toaster } from '@/components/ui/sonner';
+import { getToken } from '@/lib/auth-server';
+import { ConvexClientProvider } from './ConvexClientProvider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -24,11 +25,13 @@ export const metadata: Metadata = {
   icons: [{ rel: 'icon', url: '/favicon.ico' }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const token = await getToken();
+
   return (
     <html
       lang="en"
@@ -42,7 +45,7 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <ConvexClientProvider>{children}</ConvexClientProvider>
+        <ConvexClientProvider initialToken={token}>{children}</ConvexClientProvider>
         <Toaster />
       </body>
     </html>

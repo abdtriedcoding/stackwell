@@ -8,6 +8,6 @@ export const ROUTES = {
   VERIFY_EMAIL: '/verify-email',
 
   // builders (for query params)
-  resetPassword: (email: string) => `/reset-password?email=${email}`,
-  verifyEmail: (email: string) => `/verify-email?email=${email}`,
+  resetPassword: (email: string) => `/reset-password?email=${encodeURIComponent(email)}`,
+  verifyEmail: (email: string) => `/verify-email?email=${encodeURIComponent(email)}`,
 } as const;

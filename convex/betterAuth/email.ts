@@ -6,6 +6,7 @@ import { resend } from '../lib/resend';
 
 type OTPType = Parameters<EmailOTPOptions['sendVerificationOTP']>[0]['type'];
 
+// TODO: Remove this, it for local development only
 const FROM_EMAIL = 'onboarding@resend.dev';
 const TO_EMAIL = 'delivered@resend.dev';
 
@@ -31,10 +32,10 @@ export async function sendOtpEmailDirect(
 }
 
 export async function sendEmail(
-  ctx: GenericCtx<DataModel> | unknown,
+  ctx: GenericCtx<DataModel>,
   opts: { to: string; subject: string; text: string },
 ): Promise<void> {
-  await resend.sendEmail(requireActionCtx(ctx as GenericCtx<DataModel>), {
+  await resend.sendEmail(requireActionCtx(ctx), {
     from: FROM_EMAIL,
     to: TO_EMAIL,
     subject: opts.subject,
