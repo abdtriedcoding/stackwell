@@ -1,31 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Palette, Zap, ArrowRight } from 'lucide-react';
+import { Navbar } from '@/components/layout/navbar';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <span className="text-lg font-semibold tracking-tight">Stackwell</span>
-          <nav className="hidden items-center gap-8 md:flex">
-            <a
-              href="#features"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Features
-            </a>
-            <a
-              href="#how-it-works"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              How it works
-            </a>
-          </nav>
-          <Button size="sm">Get Started</Button>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Hero */}
       <section className="relative pt-40 pb-32 overflow-hidden">
