@@ -6,6 +6,11 @@ const passwordSchema = z
   .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
   .regex(/[0-9]/, 'Password must contain at least one number');
 
+const otpSchema = z
+  .string()
+  .length(6, 'OTP must be exactly 6 digits')
+  .regex(/^\d+$/, 'OTP must contain only digits');
+
 export const signUpSchema = z
   .object({
     name: z.string().min(1, 'Name is required'),
@@ -29,6 +34,7 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z
   .object({
+    otp: otpSchema,
     password: passwordSchema,
     confirmPassword: z.string(),
   })
@@ -38,10 +44,7 @@ export const resetPasswordSchema = z
   });
 
 export const verifyEmailSchema = z.object({
-  otp: z
-    .string()
-    .length(6, 'OTP must be exactly 6 digits')
-    .regex(/^\d+$/, 'OTP must contain only digits'),
+  otp: otpSchema,
 });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;

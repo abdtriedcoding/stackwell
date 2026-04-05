@@ -6,7 +6,7 @@ import { Field, FieldError } from '@/components/ui/field';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { OTPInputProps } from '@/features/auth/types';
 
-export function OTPInput({ name }: OTPInputProps) {
+export function OTPInput({ name, disabled = false }: OTPInputProps) {
   const { control } = useFormContext();
 
   return (
@@ -20,6 +20,7 @@ export function OTPInput({ name }: OTPInputProps) {
             value={field.value || ''}
             onChange={(value) => field.onChange(value)}
             pattern={REGEXP_ONLY_DIGITS}
+            disabled={disabled}
           >
             <InputOTPGroup className="w-full justify-center">
               {[...Array(6)].map((_, index) => (
