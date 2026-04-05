@@ -17,4 +17,9 @@ export interface AuthCardProps {
 
 export interface OTPInputProps {
   name: string;
+  disabled?: boolean;
 }
+
+export type VerificationLoadingState = 'idle' | 'verifying' | 'resending';
+
+export type AuthLoadingType = 'idle' | 'google' | 'credentials';
