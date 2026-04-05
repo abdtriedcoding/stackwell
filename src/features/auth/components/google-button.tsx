@@ -1,16 +1,42 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import type { AuthLoadingType } from '@/features/auth/types';
+import { authClient } from '@/lib/auth-client';
+import { ROUTES } from '@/lib/routes';
 
-export function GoogleButton() {
+interface GoogleButtonProps {
+  disabled: boolean;
+  setIsLoadingType: (loading: AuthLoadingType) => void;
+}
+
+export function GoogleButton({ disabled, setIsLoadingType }: GoogleButtonProps) {
+  const router = useRouter();
+
+  const handleGoogleSignIn = async () => {
+    setIsLoadingType('google');
+
+    await authClient.signIn.social(
+      {
+        provider: 'google',
+      },
+      {
+        onSuccess: () => {
+          router.push(ROUTES.HOME);
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message || 'Failed to sign in with Google');
+        },
+      },
+    );
+
+    setIsLoadingType('idle');
+  };
+
   return (
-    <Button
-      variant="outline"
-      className="w-full"
-      onClick={() => {
-        console.log('google auth');
-      }}
-    >
+    <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={disabled}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
