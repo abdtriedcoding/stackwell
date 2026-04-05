@@ -18,8 +18,11 @@ export interface AuthCardProps {
 export interface OTPInputProps {
   name: string;
   disabled?: boolean;
+  resendButton?: React.ReactNode;
 }
 
 export type VerificationLoadingState = 'idle' | 'verifying' | 'resending';
 
 export type AuthLoadingType = 'idle' | 'google' | 'credentials';
+
+export type ResetPasswordLoadingState = 'idle' | 'submitting' | 'resending';

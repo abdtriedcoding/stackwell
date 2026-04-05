@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { AuthCard, OTPInput, PasswordField } from '@/features/auth/components';
 import { resetPasswordSchema } from '@/features/auth/validation/schemas';
 import type { ResetPasswordFormData } from '@/features/auth/validation/schemas';
+import type { ResetPasswordLoadingState } from '@/features/auth/types';
 import { authClient } from '@/lib/auth-client';
 import { maskEmail } from '@/lib/utils';
 import { ROUTES } from '@/lib/routes';
@@ -20,7 +21,8 @@ export function ResetPasswordView() {
   const email = searchParams.get('email') ?? '';
   const maskedEmail = maskEmail(email);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingState, setLoadingState] = useState<ResetPasswordLoadingState>('idle');
+  const isLoading = loadingState !== 'idle';
 
   const form = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
@@ -47,7 +49,7 @@ export function ResetPasswordView() {
   }
 
   const onSubmit = async (data: ResetPasswordFormData) => {
-    setIsLoading(true);
+    setLoadingState('submitting');
     await authClient.emailOtp.resetPassword(
       {
         email,
@@ -64,7 +66,23 @@ export function ResetPasswordView() {
         },
       },
     );
-    setIsLoading(false);
+    setLoadingState('idle');
+  };
+
+  const handleResend = async () => {
+    setLoadingState('resending');
+    await authClient.emailOtp.sendVerificationOtp(
+      { email, type: 'forget-password' },
+      {
+        onSuccess: () => {
+          toast.success('Reset code sent successfully');
+        },
+        onError: (ctx: { error: { message: string } }) => {
+          toast.error(ctx.error.message || 'Failed to send reset code');
+        },
+      },
+    );
+    setLoadingState('idle');
   };
 
   if (isSubmitted) {
@@ -89,7 +107,21 @@ export function ResetPasswordView() {
     >
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          <OTPInput name="otp" disabled={isLoading} />
+          <OTPInput
+            name="otp"
+            disabled={isLoading}
+            resendButton={
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleResend}
+                disabled={isLoading}
+              >
+                {loadingState === 'resending' ? 'Sending...' : 'Resend code'}
+              </Button>
+            }
+          />
 
           <PasswordField
             name="password"
@@ -106,7 +138,7 @@ export function ResetPasswordView() {
           />
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Resetting...' : 'Reset password'}
+            {loadingState === 'submitting' ? 'Resetting...' : 'Reset password'}
           </Button>
         </form>
       </FormProvider>

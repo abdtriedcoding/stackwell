@@ -6,7 +6,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { OTPInputProps } from '@/features/auth/types';
 
-export function OTPInput({ name, disabled = false }: OTPInputProps) {
+export function OTPInput({ name, disabled = false, resendButton }: OTPInputProps) {
   const { control } = useFormContext();
 
   return (
@@ -14,8 +14,11 @@ export function OTPInput({ name, disabled = false }: OTPInputProps) {
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid} className="flex flex-col items-center gap-4">
-          <FieldLabel htmlFor={field.name}>Enter OTP</FieldLabel>
+        <Field data-invalid={fieldState.invalid} className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <FieldLabel htmlFor={field.name}>Enter OTP</FieldLabel>
+            {resendButton}
+          </div>
           <InputOTP
             id={field.name}
             maxLength={6}
