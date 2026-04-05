@@ -2,7 +2,7 @@
 
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Field, FieldError } from '@/components/ui/field';
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { OTPInputProps } from '@/features/auth/types';
 
@@ -15,7 +15,15 @@ export function OTPInput({ name, disabled = false }: OTPInputProps) {
       control={control}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid} className="flex flex-col items-center gap-4">
-          <InputOTP {...field} maxLength={6} pattern={REGEXP_ONLY_DIGITS} disabled={disabled}>
+          <FieldLabel htmlFor={field.name}>Enter OTP</FieldLabel>
+          <InputOTP
+            id={field.name}
+            maxLength={6}
+            pattern={REGEXP_ONLY_DIGITS}
+            disabled={disabled}
+            value={field.value}
+            onChange={field.onChange}
+          >
             <InputOTPGroup className="w-full justify-center">
               {[...Array(6)].map((_, index) => (
                 <InputOTPSlot
