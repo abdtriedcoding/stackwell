@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { AuthCard, FormField, PasswordField } from '@/features/auth/components';
+import { AuthCard, OTPInput, PasswordField } from '@/features/auth/components';
 import { resetPasswordSchema } from '@/features/auth/validation/schemas';
 import type { ResetPasswordFormData } from '@/features/auth/validation/schemas';
 import { authClient } from '@/lib/auth-client';
@@ -89,12 +89,7 @@ export function ResetPasswordView() {
     >
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          <FormField
-            name="otp"
-            label="Verification Code"
-            placeholder="Enter the 6-digit code"
-            disabled={isLoading}
-          />
+          <OTPInput name="otp" disabled={isLoading} />
 
           <PasswordField
             name="password"
