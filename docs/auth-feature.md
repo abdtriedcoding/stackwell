@@ -87,6 +87,7 @@ Forgot Password → Email Sent → Reset Password (OTP) → Success → Sign In
 4. User enters OTP + new password
 5. `authClient.emailOtp.resetPassword()` updates password
 6. Success message, redirect to sign in
+7. **Resend button**: Inline with "Enter OTP" label, reuses existing email from URL params
 
 ### Email Verification (Resend)
 
@@ -99,6 +100,22 @@ Verify Email View → Enter OTP → Success → Home
 3. Submit calls `authClient.emailOtp.verifyEmail()`
 4. On success: toast + redirect to home
 5. Resend button calls `authClient.emailOtp.sendVerificationOtp({ email, type: 'email-verification' })`
+
+### Resend OTP Flow
+
+Both email verification and password reset views support OTP resend:
+
+```
+User clicks "Resend code" → Loading state → Success/Error toast → Reset loading state
+```
+
+- **Location**: Button positioned to the right of the "Enter OTP" label (inline with label row)
+- **Email source**: Uses email from URL search params (no re-entry required)
+- **Loading state**: Single `loadingState` variable controls UI (resending vs idle)
+- **API calls**:
+  - Email verification: `authClient.emailOtp.sendVerificationOtp({ email, type: 'email-verification' })`
+  - Password reset: `authClient.emailOtp.sendVerificationOtp({ email, type: 'forget-password' })`
+- **Button states**: "Resend code" (idle) → "Sending..." (loading) → "Resend code" (complete)
 
 ---
 
@@ -200,25 +217,33 @@ src/features/auth/
 ├── validation/         # Zod schemas + inferred types
 │   └── schemas.ts
 └── types/              # App-level interfaces
-    └── index.ts
+    └── index.ts        # AuthUser, AuthResponse, AuthCardProps, OTPInputProps, loading state types
 ```
 
 ### Components
 
-| Component       | File                                              | Purpose                                  |
-| --------------- | ------------------------------------------------- | ---------------------------------------- |
-| `AuthCard`      | `src/features/auth/components/auth-card.tsx`      | Card wrapper for auth forms              |
-| `GoogleButton`  | `src/features/auth/components/google-button.tsx`  | Google OAuth button (fully functional)   |
-| `FormField`     | `src/features/auth/components/form-field.tsx`     | Text input with RHF Controller           |
-| `PasswordField` | `src/features/auth/components/password-field.tsx` | Password input with RHF Controller       |
-| `PasswordInput` | `src/features/auth/components/password-input.tsx` | Input with eye/eye-off visibility toggle |
-| `OTPInput`      | `src/features/auth/components/otp-input.tsx`      | 6-digit OTP input using shadcn InputOTP  |
+| Component       | File                                              | Purpose                                       |
+| --------------- | ------------------------------------------------- | --------------------------------------------- |
+| `AuthCard`      | `src/features/auth/components/auth-card.tsx`      | Card wrapper for auth forms                   |
+| `GoogleButton`  | `src/features/auth/components/google-button.tsx`  | Google OAuth button (fully functional)        |
+| `FormField`     | `src/features/auth/components/form-field.tsx`     | Text input with RHF Controller                |
+| `PasswordField` | `src/features/auth/components/password-field.tsx` | Password input with RHF Controller            |
+| `PasswordInput` | `src/features/auth/components/password-input.tsx` | Input with eye/eye-off visibility toggle      |
+| `OTPInput`      | `src/features/auth/components/otp-input.tsx`      | 6-digit OTP input with optional resend button |
 
 ### Architecture Pattern
 
 - **Views**: Import components, handle state, compose page layout
 - **Components**: Reusable, use React Hook Form Controller for form integration
 - **Page files**: Thin wrappers that import and render views
+
+### Type Definitions
+
+| Type                        | Values                                  | Usage                        |
+| --------------------------- | --------------------------------------- | ---------------------------- |
+| `VerificationLoadingState`  | `'idle' \| 'verifying' \| 'resending'`  | Email verification flow      |
+| `ResetPasswordLoadingState` | `'idle' \| 'submitting' \| 'resending'` | Password reset flow          |
+| `AuthLoadingType`           | `'idle' \| 'google' \| 'credentials'`   | Sign in flow differentiation |
 
 ---
 
@@ -284,6 +309,15 @@ src/features/auth/
 - Numeric input only via `REGEXP_ONLY_DIGITS` pattern
 - Auto-focus navigation between slots (handled by shadcn InputOTP)
 - Masked email display using `maskEmail()` utility
+- Supports optional `resendButton` prop for inline resend action
+- Uses RHF `Controller` with explicit `value` and `onChange` (not spread) for proper integration
+- Error state styling via `aria-invalid` on `InputOTPSlot` elements
+
+### Loading States
+
+- Uses discriminated union state types (`ResetPasswordLoadingState`, `VerificationLoadingState`)
+- Avoids multiple boolean state variables; single state controls all UI feedback
+- Button labels reflect exact loading sub-state (e.g., "Resetting..." vs "Sending...")
 
 ### Error Handling
 
