@@ -15,13 +15,7 @@ export function OTPInput({ name, disabled = false }: OTPInputProps) {
       control={control}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid} className="flex flex-col items-center gap-4">
-          <InputOTP
-            maxLength={6}
-            value={field.value || ''}
-            onChange={(value) => field.onChange(value)}
-            pattern={REGEXP_ONLY_DIGITS}
-            disabled={disabled}
-          >
+          <InputOTP {...field} maxLength={6} pattern={REGEXP_ONLY_DIGITS} disabled={disabled}>
             <InputOTPGroup className="w-full justify-center">
               {[...Array(6)].map((_, index) => (
                 <InputOTPSlot

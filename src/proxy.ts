@@ -15,8 +15,12 @@ const authRoutes: string[] = [
 export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isAuthRoute = authRoutes.includes(pathname);
-  const isPublicRoute = publicRoutes.includes(pathname);
+  const isAuthRoute = authRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + ROUTES.HOME),
+  );
+  const isPublicRoute = publicRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + ROUTES.HOME),
+  );
   const sessionCookie = getSessionCookie(request);
 
   // Redirect logged-in users away from auth pages
